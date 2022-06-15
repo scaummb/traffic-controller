@@ -1,0 +1,4 @@
+javamelody监控java项目，只能监控一个项目，就是说每个微服务实力都需要一个javamelody，它是一个jar包，可以理解为一个插件。
+一个很大的用途就是，用来监控sql。
+
+打开监控页面：http://localhost:8080/monitoring

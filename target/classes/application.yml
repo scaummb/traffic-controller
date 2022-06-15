@@ -1,0 +1,12 @@
+# Spring基础配置
+spring:
+  application:
+    name: traffic-controller
+
+# 配置的端口
+server:
+  port: 8080
+
+#mybatis的相关配置
+mybatis:
+  mapper-locations: classpath:mapper/*.xml

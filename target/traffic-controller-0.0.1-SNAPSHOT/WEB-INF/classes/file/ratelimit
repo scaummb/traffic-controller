@@ -1,0 +1,90 @@
+RateLimiter 目前只有一个子类，那就是抽象类 SmoothRateLimiter，SmoothRateLimiter 有两个实现类，也就是我们这边要介绍的两种模式
+
+限流监控：
+1、源码解读：https://www.jianshu.com/p/d2f48d7f8011
+2、https://www.cnblogs.com/myseries/p/12634557.html
+3、https://blog.csdn.net/weixin_38650898/article/details/120673927
+
+SmoothBursty 可以处理突发请求，因为它会缓存最多 1 秒的 permits
+SmoothWarmingUp 适用于资源需要预热的场景，比如我们的某个接口业务，需要使用到数据库连接，
+  由于连接需要预热才能进入到最佳状态，如果我们的系统长时间处于低负载或零负载状态（当然，应用刚启动也是一样的），
+  连接池中的连接慢慢释放掉了，此时我们认为连接池是冷的。
+
+
+【Google限流器】
+
+Filter：request限速
+Token登录：非管理员需要进行限速控制
+eg，com.tencent.tgit.web.mobile.security.CustomJwtAuthenticationFilter#doFilterInternal
+
+源码
+com.google.common.util.concurrent.RateLimiter#tryAcquire()
+
+拓展
+@GwtIncompatible 注解使用？
+The presence of this annotation on an API indicates that the method may not be used with the Google Web Toolkit  (GWT).
+
+com.google.common.util.concurrent.RateLimiter
+限流器：抽象
+
+作为如此重要的功能，在 Java 中自然有很多实现限流的类库，例如 Google 的开源项目 guava 提供了 RateLimiter 类，实现了单点的令牌桶限流。
+
+而分布式限流常用的则有 Hystrix、resilience4j、Sentinel 等框架，但这些框架都需引入第三方的类库，对于国企等一些保守的企业，引入外部类库都需要经过层层审批，较为麻烦。
+
+分布式限流本质上是一个集群并发问题，而 Redis 作为一个应用广泛的中间件，又拥有单进程单线程的特性，天然可以解决分布式集群的并发问题。本文简单介绍一个通过 Redis 实现单次请求判断限流的功能。
+
+RateLimiter 是一个抽象类，SmoothRateLimiter 继承自 RateLimiter，不过 SmoothRateLimiter 仍然是一个抽象类，SmoothBursty 和 SmoothWarmingUp 才是具体的实现类。
+Guava有两种限流模式，一种为稳定模式(SmoothBursty:令牌生成速度恒定)，一种为渐进模式(SmoothWarmingUp:令牌生成速度缓慢提升直到维持在一个稳定值)
+两种模式实现思路类似，主要区别在等待时间的计算上，本篇重点介绍SmoothBursty
+
+由于RateLimiter允许预消费，上次请求预消费令牌后
+
+在解析SmoothBursty原理前，重点解释下SmoothBursty中几个属性的含义
+
+/**
+ * The currently stored permits.
+ * 当前存储令牌数
+ */
+double storedPermits;
+
+/**
+ * The maximum number of stored permits.
+ * 最大存储令牌数
+ */
+double maxPermits;
+
+/**
+ * The interval between two unit requests, at our stable rate. E.g., a stable rate of 5 permits
+ * per second has a stable interval of 200ms.
+ * 添加令牌时间间隔
+ */
+double stableIntervalMicros;
+
+/**
+ * The time when the next request (no matter its size) will be granted. After granting a request,
+ * this is pushed further in the future. Large requests push this further than small requests.
+ * 下一次请求可以获取令牌的起始时间
+ * 由于RateLimiter允许预消费，上次请求预消费令牌后
+ * 下次请求需要等待相应的时间到nextFreeTicketMicros时刻才可以获取令牌
+ */
+private long nextFreeTicketMicros = 0L; // could be either in the past or future
+
+storedPermits 表明当前令牌桶中有多少令牌。maxPermits 表示令牌桶最大令牌数目，storedPermits 的取值范围为：[0, maxPermits]。stableIntervalMicros 等于 1/qps，它代表系统在稳定期间，两次请求之间间隔的微秒数。例如：如果我们设置的 qps 为5，则 stableIntervalMicros 为200ms。nextFreeTicketMicros 表示系统处理完当前请求后，下一次请求被许可的最短微秒数，如果在这之前有请求进来，则必须等待。
+当我们设置了 qps 之后，需要计算某一段时间系统能够生成的令牌数目，那么怎么计算呢？一种方式是开启一个后台任务去做，但是这样代价未免有点大。
+
+RateLimiter 中采取的是惰性计算方式：在每次请求进来的时候先去计算上次请求和本次请求之间应该生成多少个令牌。
+
+【接下来介绍几个关键函数】
+/**
+ * Updates {@code storedPermits} and {@code nextFreeTicketMicros} based on the current time.
+ */
+void resync(long nowMicros) {
+    // if nextFreeTicket is in the past, resync to now
+    if (nowMicros > nextFreeTicketMicros) {
+      double newPermits = (nowMicros - nextFreeTicketMicros) / coolDownIntervalMicros();
+      storedPermits = min(maxPermits, storedPermits + newPermits);
+      nextFreeTicketMicros = nowMicros;
+    }
+}
+
+https://www.jianshu.com/p/d2f48d7f8011

@@ -1,0 +1,12 @@
+/Users/momoubin/code/tracffic-control/src/main/java/com/bryant/traffic/SpringBootdemoApplication.java
+/Users/momoubin/code/tracffic-control/src/main/java/com/bryant/traffic/model/User.java
+/Users/momoubin/code/tracffic-control/src/main/java/com/bryant/traffic/service/SystemService.java
+/Users/momoubin/code/tracffic-control/src/main/java/com/bryant/traffic/mapper/UserMapper.java
+/Users/momoubin/code/tracffic-control/src/main/java/com/bryant/traffic/controller/BaseController.java
+/Users/momoubin/code/tracffic-control/src/main/java/com/bryant/traffic/service/UserService.java
+/Users/momoubin/code/tracffic-control/src/main/java/com/bryant/traffic/controller/TestController.java
+/Users/momoubin/code/tracffic-control/src/main/java/com/bryant/traffic/service/UserServiceImpl.java
+/Users/momoubin/code/tracffic-control/src/main/java/com/bryant/traffic/service/SystemServiceImpl.java
+/Users/momoubin/code/tracffic-control/src/main/java/com/bryant/traffic/service/LimitService.java
+/Users/momoubin/code/tracffic-control/src/main/java/com/bryant/traffic/service/LimitServiceImpl.java
+/Users/momoubin/code/tracffic-control/src/main/java/com/bryant/traffic/model/Token.java
