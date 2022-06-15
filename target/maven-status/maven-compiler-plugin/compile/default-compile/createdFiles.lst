@@ -6,6 +6,7 @@ com/bryant/traffic/model/User.class
 com/bryant/traffic/service/UserServiceImpl.class
 com/bryant/traffic/model/Token.class
 com/bryant/traffic/mapper/UserMapper.class
+com/bryant/traffic/WebAppConfig.class
 com/bryant/traffic/controller/BaseController.class
 com/bryant/traffic/controller/TestController.class
 com/bryant/traffic/SpringBootdemoApplication.class

@@ -20,3 +20,4 @@ tgit-web/tgit-web-pc/src/main/.vscode
 .settings
 .run/*
 /.gradle/
+.DS_Store
