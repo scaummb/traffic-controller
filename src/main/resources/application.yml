@@ -2,6 +2,18 @@
 spring:
   application:
     name: traffic-controller
+  redis:
+    host: 9.135.130.175
+    port: '6380'
+    password: '{cipher}0331c51c87a50a24b928aebb3a7bcd11e65c47b70797e6da7d4b65aae5c6bb45'
+    timeout: 1000
+    maxWait: 2000
+    maxIdle: 10
+
+# redis自动化配置开启
+redis:
+  auto:
+    config: 'true'
 
 # 配置的端口
 server:
@@ -10,3 +22,5 @@ server:
 #mybatis的相关配置
 mybatis:
   mapper-locations: classpath:mapper/*.xml
+banner:
+  location:banner.png

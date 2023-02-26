@@ -1,9 +1,13 @@
+package dao;
+
 import com.bryant.traffic.mapper.UserMapper;
 import com.bryant.traffic.model.User;
+import dao.BaseDaoTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class UserDaoTest extends BaseDaoTest {
+
     @Autowired
     private UserMapper userMapper;
 

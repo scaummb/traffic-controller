@@ -1,7 +1,8 @@
-package com.bryant.traffic.service;
+package com.bryant.traffic.service.impl;
 
 import com.bryant.traffic.mapper.UserMapper;
 import com.bryant.traffic.model.User;
+import com.bryant.traffic.service.UserService;
 import java.util.Random;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserMapper userMapper;

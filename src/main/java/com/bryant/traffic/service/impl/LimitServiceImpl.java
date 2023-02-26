@@ -1,5 +1,6 @@
-package com.bryant.traffic.service;
+package com.bryant.traffic.service.impl;
 
+import com.bryant.traffic.service.LimitService;
 import com.google.common.util.concurrent.RateLimiter;
 import java.text.MessageFormat;
 import lombok.extern.slf4j.Slf4j;
@@ -7,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
-public class LimitServiceImpl implements LimitService{
+public class LimitServiceImpl implements LimitService {
 
     /**
      * 业务粒度限流

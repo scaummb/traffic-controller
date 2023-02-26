@@ -1,0 +1,5 @@
+${AnsiColor.GREEN}
+TRAFFIC CONTROLLER
+Application : ${spring.application.name}
+Web Context Path : ${root.context.path}
+Spring Boot Version: ${spring-boot.version}${spring-boot.formatted-version}

@@ -1,5 +1,6 @@
-package com.bryant.traffic.service;
+package com.bryant.traffic.service.impl;
 
+import com.bryant.traffic.service.SystemService;
 import org.springframework.stereotype.Service;
 
 @Service
